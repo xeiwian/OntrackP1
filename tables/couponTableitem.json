@@ -1,0 +1,7 @@
+{
+    "userID_couponID": {"N": "001012"},
+    "DateTime": {"N": "14062019192650"},
+    "userID": {"N": "001"},
+    "couponID": {"N": "012"},
+    "coupon code": {"S": "ABCDEF"}
+}
