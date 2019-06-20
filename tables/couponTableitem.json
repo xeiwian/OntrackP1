@@ -1,16 +1,14 @@
 [
 {
-    "userID_couponID": {"N": "112"},
-    "DateTime": {"N": "14062019192650"},
-    "userID": {"N": "1"},
-    "couponID": {"N": "12"},
-    "couponCode": {"S": "ABCD34"}
+    "userID_couponID": {"N": 112},
+    "DateTime": {"N": 14062019192650},
+    "userID": {"N": 1},
+    "couponID": {"N": 12}
 },
 {
-    "userID_couponID": {"N": "213"},
-    "DateTime": {"N": "16062019202654"},
-    "userID": {"N": "2"},
-    "couponID": {"N": "13"},
-    "couponCode": {"S": "AB12CD"}
+    "userID_couponID": {"N": 213},
+    "DateTime": {"N": 16062019202654},
+    "userID": {"N": 2},
+    "couponID": {"N": 13}
 }
 ]
