@@ -1,8 +1,8 @@
 const AWS = require("aws-sdk");
 
 AWS.config.update({
-    region: "eu-west-2",
-    endpoint: "http://localhost:8000"
+  region: "us-west-2",
+  endpoint: "http://localhost:8000"
 });
 
 const dynamodb = new AWS.DynamoDB();
@@ -30,3 +30,5 @@ dynamodb.createTable(params, function(err, data) {
         console.log("Created table. Table description JSON:", JSON.stringify(data, null, 2));
     }
 });
+
+// java -D"java.library.path=./DynamoDBLocal_lib" -jar DynamoDBLocal.jar -sharedDb
