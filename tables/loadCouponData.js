@@ -1,31 +1,26 @@
-const AWS = require("aws-sdk");
-const fs = require('fs');
+const AWS = require('aws-sdk');
 
-AWS.config.update({
-    region: "us-west-2",
-    endpoint: "http://localhost:8000"
+const dynamodb = new AWS.DynamoDB({
+    endpoint: 'http://localhost:8000',
+    region: 'us-west-2'
 });
 
-const docClient = new AWS.DynamoDB.DocumentClient();
-console.log("Importing Fake coupon data into DynamoDB. Please wait.");
-const coupon = JSON.parse(fs.readFileSync('couponTableitem.json', 'utf8'));
-coupon.forEach(function(coupon) {
-console.log(coupon)
 const params = {
-        TableName: "CouponDBLocal",
-        Item: {            
-            "userID_couponID": coupon.userID_couponID,
-            "DateTime": coupon.DateTime,
-            "userID": coupon.userID,
-            "couponID": coupon.couponID,
-            "couponCode": coupon.couponCode
-        }
-    };
-docClient.put(params, function(err, data) {
-       if (err) {
-           console.error("Unable to add coupon data",  ". Error JSON:", JSON.stringify(err, null, 2));
-       } else {
-           console.log("PutItem succeeded:");
-       }
-    });
-});
+    Item: {
+        'userID_couponID': { N: '112' },
+        'DateTime': { N: '14062019192' },
+        'userID': { N: '1' },
+        'couponID': { N: '12' },
+        'couponCode': { S: 'ABC123' },
+    },
+    TableName: 'CouponDBLocal',
+    ReturnConsumedCapacity: "TOTAL",
+};
+
+dynamodb.putItem(params, (err, data) => {
+    if (err) {
+        console.error(err, err.stack);
+    } else {
+        console.log(data);
+    }
+})
