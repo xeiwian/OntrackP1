@@ -1,3 +1,6 @@
+const http = require('http');
+const url = require('url');
+const fs = require('fs');
 const express = require ('express');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
@@ -22,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // this only purpose is to test the API 
-app.post('/testing', (req, res) => {
+app.post('/', (req, res) => {
     console.log(req.body)
     res.send('hey')
 });
@@ -87,6 +90,16 @@ app.get('/coupon/112', (req, res) => {
 
 // require('./app/routes')(app, {});
 
-app.listen(port, () => {
-    console.log("We are live on port " + port);
-})
+// run contents of test.html in http://localhost:3000
+http.createServer(function (req, res) {
+    fs.readFile('test.html', function(err, data) {
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(data);
+        res.end();
+    });
+}).listen(port); //the server object listens on port 
+
+
+// app.listen(port, () => {
+//     console.log("We are live on port " + port);
+// })
