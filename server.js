@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
 // });
 
 // receive post request from webpage button
-app.post('/', (req, res) => {
+app.post('/', (req, res, next) => {
     res.sendFile('/test.html', {root: __dirname });
     var token = req.body.idToken;
     var couponID = req.body.couponid;
@@ -65,25 +65,25 @@ app.post('/', (req, res) => {
         var userID = decodedToken.user_id + ".";
         var userID_couponID = userID.concat(couponID);
 
-        // const params = {
-        //     Item: {
-        //         'user_id_coupon_id': { S: userID_couponID },
-        //         'dateTime': { S: dateTIME },
-        //         'coupon_id': { S: couponID },
-        //         'coupon_code': { S: couponCODE }
-        //     },
-        //     TableName: 'CouponLocalDB',
-        //     ReturnConsumedCapacity: "TOTAL",
-        // };
-        
-        // dynamodb.putItem(params, (err, data) => {
-        //     if (err) {
-        //         console.error(err, err.stack);
-        //     } else {
-        //         res.send(data);
-        //         console.log(data);
-        //     }
-        // })
+        const params = {
+            Item: {
+                'user_id_coupon_id': { S: userID_couponID },
+                'dateTime': { S: dateTIME },
+                'coupon_id': { S: couponID },
+                'coupon_code': { S: couponCODE }
+            },
+            TableName: 'CouponLocalDB',
+            ReturnConsumedCapacity: "TOTAL",
+        };
+
+        dynamodb.putItem(params, (err, data) => {
+            if (err) {
+                console.error(err, err.stack);
+            } else {
+                // res.send(data);
+                console.log(data);
+            }
+        })
     })
     .catch((err) => {
         console.log(err)
