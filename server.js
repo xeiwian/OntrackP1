@@ -6,7 +6,16 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const AWS = require("aws-sdk");
+const admin = require('firebase-admin');
+const serviceAccount = require('./ontrackp1-firebase-adminsdk-6otas-f17899be56.json');
 
+// setting up firebase admin sdk
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    // databaseURL: "https://ontrackp1.firebaseio.com"
+  });
+
+// database endpoint
 AWS.config.update({
     region: "us-west-2",
     endpoint: "http://localhost:8000"
@@ -14,7 +23,7 @@ AWS.config.update({
 
 const dynamodb = new AWS.DynamoDB();
 
-const app = express();
+var app = express();
 
 const port = 3000;
 
@@ -34,12 +43,30 @@ app.get('/', (req, res) => {
     res.sendFile('/test.html', {root: __dirname })
 });
 
+// // receive post request from webpage button
+// app.post('/', (req, res) => {
+//     console.log(req.body);
+//     res.sendFile('/test.html', {root: __dirname })
+// });
+
 // receive post request from webpage button
 app.post('/', (req, res) => {
-    console.log(req.body);
-    res.sendFile('/test.html', {root: __dirname })
+    res.sendFile('/test.html', {root: __dirname });
+    var token = req.body.idToken;
+    console.log(token);
+    // verifying and decoding id token 
+    admin.auth().verifyIdToken(token)
+    .then((decodedToken) => {
+        // LOG.info(`Successfully validated registrationToken ${token}`);
+        res.send(decodedToken);
+        console.log(decodedToken);
+        // var userID = decodedToken.user_id;
+        // console.log(userID);
+    })
+    .catch((err) => {
+        console.log(err)
+    });
 });
-
 
 // GET the table
 app.get('/coupon', (req, res) => {
