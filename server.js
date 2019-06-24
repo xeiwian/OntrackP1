@@ -28,8 +28,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// run contents of test.html in http://localhost:3000
+// get the webpage with button
 app.get('/', (req, res) => {
+    console.log(req.body);
+    res.sendFile('/test.html', {root: __dirname })
+});
+
+// receive post request from webpage button
+app.post('/', (req, res) => {
     console.log(req.body);
     res.sendFile('/test.html', {root: __dirname })
 });
