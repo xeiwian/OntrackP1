@@ -13,6 +13,7 @@
     "firebase": "^6.2.0",
     "firebase-admin": "^8.2.0",
     "morgan": "^1.9.1",
+    "req-flash": "0.0.3",
     "router": "^1.3.3"
   },
   "devDependencies": {

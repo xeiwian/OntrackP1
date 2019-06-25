@@ -7,23 +7,25 @@ AWS.config.update({
     endpoint: "http://localhost:8000"
 });
 
+// use of dynamodb for database
 const dynamodb = new AWS.DynamoDB();
 
-// extract user info from coupon button 
+// extract and insert user info from coupon button 
 function extractUserInfo(req, res) {
     res.sendFile('/test.html', {root: __dirname });
     var token = req.body.idToken;
     var couponID = req.body.couponid;
     var couponCODE = req.body.couponcode;
     var dateTIME = (Date(Date.now())).toString();
-    // console.log(token);
+
     // verifying and decoding id token 
     admin.auth().verifyIdToken(token)
     .then((decodedToken) => {
         var userID = decodedToken.user_id + ".";
+        // concatenate user id and coupon id for storing it in database as Partition key
         var userID_couponID = userID.concat(couponID);
 
-        const params = {
+        var params = {
             Item: {
                 'user_id_coupon_id': { S: userID_couponID },
                 'dateTime': { S: dateTIME },
@@ -34,21 +36,27 @@ function extractUserInfo(req, res) {
             ReturnConsumedCapacity: "TOTAL",
         };
 
-        dynamodb.putItem(params, (err, data) => {
-            if (err) {
-                console.error(err, err.stack);
-            } else {
-                // res.send(data);
-                console.log(data);
-            }
-        })
+        // insert the new user info into database if it doesn't exists, 
+        // otherwise return webpage and let user know coupon is claimed
+        if (userID_couponID == null) {
+            dynamodb.putItem(params, (err, data) => {
+                if (err) {
+                    console.error(err, err.stack);
+                } else {
+                    console.log(data);
+                }
+            })
+        } else {
+            // res.send({message: 'Coupon is claimed.'});
+            console.log('item exists');
+        }
     })
     .catch((err) => {
         console.log(err)
     });
 }
 
-// GET the table 
+// GET CouponLocalDB table 
 function getCouponTable(req, res) {
     var params = {
         TableName: 'CouponLocalDB',
