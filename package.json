@@ -10,6 +10,7 @@
     "connect-dynamodb": "^2.0.3",
     "cookie-parser": "^1.4.4",
     "dynamodb": "^1.2.0",
+    "ejs": "^2.6.2",
     "express": "^4.17.1",
     "firebase": "^6.2.0",
     "firebase-admin": "^8.2.0",
