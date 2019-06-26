@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "alert-node": "^1.2.5",
     "aws-sdk": "^2.478.0",
     "body-parser": "^1.19.0",
     "connect-dynamodb": "^2.0.3",
@@ -13,6 +14,8 @@
     "firebase": "^6.2.0",
     "firebase-admin": "^8.2.0",
     "morgan": "^1.9.1",
+    "popup": "0.0.3",
+    "popups": "^1.1.3",
     "req-flash": "0.0.3",
     "router": "^1.3.3"
   },

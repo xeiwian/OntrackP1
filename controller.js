@@ -10,6 +10,11 @@ AWS.config.update({
 // use of dynamodb for database
 const dynamodb = new AWS.DynamoDB();
 
+// get the webpage with coupon button
+function webpage(req, res) {
+    res.sendFile('/test.html', {root: __dirname })
+}
+
 // extract and insert user info from coupon button 
 function extractUserInfo(req, res) {
     res.sendFile('/test.html', {root: __dirname });
@@ -24,43 +29,56 @@ function extractUserInfo(req, res) {
         var userID = decodedToken.user_id + ".";
         // concatenate user id and coupon id for storing it in database as Partition key
         var userID_couponID = userID.concat(couponID);
-
-        var params = {
+        // parameters for inserting user info to database
+        var params_insert = {
             Item: {
                 'user_id_coupon_id': { S: userID_couponID },
                 'dateTime': { S: dateTIME },
                 'coupon_id': { S: couponID },
                 'coupon_code': { S: couponCODE }
             },
-            TableName: 'CouponLocalDB',
-            ReturnConsumedCapacity: "TOTAL",
+            TableName: 'CouponLocalDB'
         };
-
-        // insert the new user info into database if it doesn't exists, 
-        // otherwise return webpage and let user know coupon is claimed
-        if (userID_couponID == null) {
-            dynamodb.putItem(params, (err, data) => {
-                if (err) {
-                    console.error(err, err.stack);
-                } else {
-                    console.log(data);
-                }
-            })
-        } else {
-            // res.send({message: 'Coupon is claimed.'});
-            console.log('item exists');
-        }
+        // parameters for querying user info in database
+        var params = {
+            ReturnConsumedCapacity: "TOTAL",
+            ExpressionAttributeValues: {
+                ":v1": {
+                  S: userID_couponID
+                 }
+               }, 
+                KeyConditionExpression: "user_id_coupon_id = :v1", 
+                // ProjectionExpression: "dateTime", 
+                TableName: 'CouponLocalDB'
+        };
+        // query for user info in database
+        dynamodb.query(params, function(err, data) {
+            // if user info doesn't exists, then  
+            // insert user info into database
+            if (userID_couponID == null) {
+                dynamodb.putItem(params_insert, (err, data) => {
+                    if (err) {
+                        console.error(err, err.stack);
+                    } else {
+                        console.log(data);
+                    }
+                })
+            } else {
+                if (err) console.log(err, err.stack); // an error occurred
+                else     console.log(data);           // successful response
+                console.log('item exists');
+            }
+        })
     })
-    .catch((err) => {
+    .catch((err) => { // an error occurred
         console.log(err)
     });
-}
+} 
 
 // GET CouponLocalDB table 
 function getCouponTable(req, res) {
     var params = {
         TableName: 'CouponLocalDB',
-        // ProjectionExpression: 'couponID, couponCode'
     };    
     dynamodb.scan(params, function (err, data) {
         if (err) console.log(err, err.stack); // an error occurred
@@ -71,51 +89,8 @@ function getCouponTable(req, res) {
     });
 }
 
-// CREATE new table 
-function createCouponTable(req, res) {
-    var params = {
-        AttributeDefinitions: [
-        {
-            AttributeName: 'user_id_coupon_id',
-            AttributeType: 'S'
-        },
-        {
-            AttributeName: 'dateTime',
-            AttributeType: 'S'
-        }
-        ],
-        KeySchema: [
-        {
-            AttributeName: 'user_id_coupon_id',
-            KeyType: 'HASH'
-        },
-        {
-            AttributeName: 'dateTime',
-            KeyType: 'RANGE'
-        }
-        ],
-        ProvisionedThroughput: {
-        ReadCapacityUnits: 1,
-        WriteCapacityUnits: 1
-        },
-        TableName: 'CouponLocalDB',
-        StreamSpecification: {
-        StreamEnabled: false
-        }
-    };
-
-    dynamodb.createTable(params, (err, data) => {
-        if (err) {
-            console.error(err, err.stack);
-        } else {
-            res.send(data);
-            console.log(data);
-        }
-    })
-}
-
 module.exports = {
+    webpage,
     extractUserInfo,
-    getCouponTable,
-    createCouponTable
+    getCouponTable
 };

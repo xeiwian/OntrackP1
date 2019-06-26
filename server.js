@@ -21,14 +21,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ---------------------------------------------------------------------------------------
-
 // get the webpage with button
-app.get("/", (req, res) => { res.sendFile('/test.html', {root: __dirname }) });
+app.get("/", controller.webpage);
 app.post("/", controller.extractUserInfo);
 app.get("/db", controller.getCouponTable);
-app.post("/createdb", controller.createCouponTable);
 
+// port number
 const port = 3000;
 
 // listening to port 3000
@@ -36,5 +34,5 @@ app.listen(port, () => {
     console.log("We are live on port " + port);
 })
 
-
-
+// command to start up server for database
+// java -D"java.library.path=./DynamoDBLocal_lib" -jar DynamoDBLocal.jar -sharedDb
