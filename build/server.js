@@ -17,5 +17,6 @@ const port = 3000; // port number
 app.listen(port, () => {
     console.log("We are live on port " + port);
 });
+// run this line in another terminal to start up local dynamodb server
 // java -D"java.library.path=./DynamoDBLocal_lib" -jar DynamoDBLocal.jar -sharedDb
 //# sourceMappingURL=server.js.map

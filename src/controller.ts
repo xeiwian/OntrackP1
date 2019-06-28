@@ -79,10 +79,10 @@ async function extractUserInfo(req, res) { // extract and insert user info from 
         let getUserInfo: any = await getUser({
             // parameters for inserting user info to database
             Key: {
-             "user_id_coupon_id": {
+             "user_id_coupon_id": { // hash key 
                S: userID_couponID
               },
-             "coupon_id": {
+             "coupon_id": { // range key
                S: couponID
               }
             }, 
@@ -99,7 +99,7 @@ async function extractUserInfo(req, res) { // extract and insert user info from 
                 // parameters for inserting user info
                 Item: {
                     'user_id_coupon_id': { S: userID_couponID /* abc213 */ },
-                    'coupon_id': { S: couponID },
+                    'coupon_id': { S: couponID /*123456*/ },
                     'dateTime': { S: dateTIME /* 2019-06-27 */ },
                     'coupon_code': { S: couponCODE }
                 },

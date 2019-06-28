@@ -89,7 +89,7 @@ async function extractUserInfo(req, res) {
                 // parameters for inserting user info
                 Item: {
                     'user_id_coupon_id': { S: userID_couponID /* abc213 */ },
-                    'coupon_id': { S: couponID },
+                    'coupon_id': { S: couponID /*123456*/ },
                     'dateTime': { S: dateTIME /* 2019-06-27 */ },
                     'coupon_code': { S: couponCODE }
                 },
