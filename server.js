@@ -34,5 +34,4 @@ app.listen(port, () => {
     console.log("We are live on port " + port);
 })
 
-// command to start up server for database
 // java -D"java.library.path=./DynamoDBLocal_lib" -jar DynamoDBLocal.jar -sharedDb
