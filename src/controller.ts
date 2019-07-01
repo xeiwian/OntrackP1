@@ -9,7 +9,7 @@ AWS.config.update({ // database endpoint
 const dynamodb = new AWS.DynamoDB(); // use of dynamodb for database
 
 function webpage(req, res) { // get the webpage with coupon button
-    res.sendFile('/test.html', {root: __dirname })
+    res.sendfile('./webpages/test.html');
 }
 
 function getUser(params) { // function for getting user info from database
@@ -106,10 +106,10 @@ async function extractUserInfo(req, res) { // extract and insert user info from 
                 TableName: 'CouponLocalDB',
             });
             console.log(insertUserInfo);
-            res.sendFile('/thank.html', {root: __dirname });
+            res.sendfile('./webpages/thank.html');
             console.log('item inserted success');
         } else {
-            res.sendFile('/claimed.html', {root: __dirname });
+            res.sendfile('./webpages/claimed.html');
             console.log('item exists');
         }
     } catch (err) {
